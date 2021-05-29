@@ -22,7 +22,6 @@ impl PidController {
     let d  = diff * 0.1;
 
     self.prev = input;
-    println!("input={}, sum={}, diff={}, out={}", input, self.sum, diff, p + i + d);
     p + i + d
   }
 }

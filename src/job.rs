@@ -36,14 +36,11 @@ impl JobManager {
       });
     }
     let mut current_switches:HashMap<u32, u32> = HashMap::new();
-    let mut cnt: usize = 0;
-    while let Some(result) = rx.recv().await {
-      if let Ok((pid, switch)) = result {
-        current_switches.insert(pid, switch);
-      }
-      cnt += 1;
-      if cnt >= processes.len() {
-        break;
+    for _i in 0..processes.len() {
+      if let Some(result) = rx.recv().await {
+        if let Ok((pid, switch)) = result {
+          current_switches.insert(pid, switch);
+        }
       }
     }
     let mut delta: u32 = 0;
