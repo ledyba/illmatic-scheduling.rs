@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::iter::FromIterator;
 use std::mem::swap;
 
 use tokio::io;
