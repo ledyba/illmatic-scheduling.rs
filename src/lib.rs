@@ -1,7 +1,10 @@
-pub mod observer;
-pub mod controller;
+pub mod kernel;
+
+pub mod pid;
+
 pub mod job;
-pub use job::JobManager;
+pub use job::Scheduler;
+pub use job::Builder;
 
 #[cfg(test)]
 mod tests {
@@ -12,9 +15,9 @@ mod tests {
   fn test_with_cargo() {
     let rt = tokio::runtime::Builder::new_current_thread().enable_time().build().unwrap();
     rt.block_on(async move {
-      let mut mgr = JobManager::new(&["firefox"], 10.0);
+      let mut sch = Builder::new().add_target_process("firefox").set_point(10.0).build();
       for _i in 0..10 {
-        mgr.watch().await.unwrap();
+        sch.watch().await.unwrap();
         sleep(Duration::from_millis(1000)).await;
       }
     });
