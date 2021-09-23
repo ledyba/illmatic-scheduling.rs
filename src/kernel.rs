@@ -1,6 +1,5 @@
 use tokio::fs;
 use tokio::io;
-use lazy_static::lazy_static;
 use regex::Regex;
 
 pub async fn collect_processes<T>(process_names: &[T]) -> io::Result<Vec<(String, u32)>>
@@ -36,9 +35,9 @@ where
   io::Result::Ok(result)
 }
 
-lazy_static! {
-  static ref NV_CTXT_PAT: Regex = Regex::new(r"nonvoluntary_ctxt_switches:	(\d+)").unwrap();
-}
+static NV_CTXT_PAT: once_cell::sync::Lazy<Regex> = once_cell::sync::Lazy::new(|| {
+  Regex::new(r"nonvoluntary_ctxt_switches:	(\d+)").unwrap()
+});
 
 pub async fn observe_nonvoluntary_ctxt_switches(pid: u32) -> io::Result<u32> {
   let result = fs::read_to_string(format!("/proc/{}/status", pid)).await?;
